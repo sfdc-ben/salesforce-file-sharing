@@ -1,0 +1,30 @@
+<aura:component implements="flexipage:availableForRecordHome, force:hasRecordId" access="global">
+    <aura:attribute name="cardTitle" type="String" default="Public File Explorer" />
+    <aura:attribute name="cardIcon" type="String" default="standard:file" />
+    <aura:attribute name="cardIconCustom" type="String" default="/resource/custom002" />
+    <aura:attribute name="cardIconVariant" type="String" default="Square" />
+    <aura:attribute name="picklistToFilter" type="String" default="" />
+    <!--Card-->
+    <div class="slds-card slds-card_boundary slds-p-around_medium">
+        <!--Card Header (Icon, Title, Action)-->
+        <div class="slds-media slds-media_center slds-m-bottom_medium">
+            <div class="slds-media__figure">
+                <lightning:avatar alternativeText="{!v.cardTitle}" fallbackIconName="{!v.cardIcon}" size="small" src="{!v.cardIconCustom}" variant="{!v.cardIconVariant}"></lightning:avatar>
+            </div>
+            <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <a class="slds-card__header-link slds-truncate" href="javascript:void(0);">
+                            <span><b>{!v.cardTitle}</b></span>
+                        </a>
+                    </h2>
+            </div>
+            <div class="slds-media__figure slds-media_figure_reverse">
+                <!--Action Buttons-->
+            </div>
+        </div>
+        <!--Card Body-->
+        <div>
+            <c:publicFileExplorer picklistToFilter="{!v.picklistToFilter}"/>
+        </div>
+    </div>
+</aura:component>	

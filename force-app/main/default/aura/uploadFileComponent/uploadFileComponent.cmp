@@ -1,0 +1,89 @@
+<aura:component implements="flexipage:availableForRecordHome, force:hasRecordId" controller="publicFileController" access="global">
+    <!--Card Attributes-->
+    <aura:attribute name="cardTitle" type="String" default="Current File" />
+    <aura:attribute name="cardIcon" type="String" default="standard:file" />
+    <aura:attribute name="cardIconCustom" type="String" default="/resource/custom002" />
+    <aura:attribute name="cardIconVariant" type="String" default="Square" />
+    <aura:attribute name="sectionOpen" type="Boolean" default="false" />
+    <!--Uploader Attributes-->
+    <aura:attribute name="multiple" type="Boolean" default="true" />
+    <aura:attribute name="disabled" type="Boolean" default="false" />
+    <aura:attribute name="publicFileName" type="String" default="" />
+    <!--Preview Attributes-->
+    <aura:attribute name="fileRecord" type="Object" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <force:recordData aura:id="recordLoader" 
+    recordId="{!v.recordId}" 
+    fields="Name, File_Identifier__c, Sharing_URL__c" 
+    targetFields="{!v.fileRecord}" 
+    />
+
+    <!--Card-->
+    <div class="slds-card slds-card_boundary slds-p-around_medium">
+        <!--Card Header (Icon, Title, Action)-->
+        <div class="slds-media slds-media_center slds-m-bottom_medium">
+            <div class="slds-media__figure">
+                <lightning:avatar alternativeText="{!v.cardTitle}" fallbackIconName="{!v.cardIcon}" size="small" src="{!v.cardIconCustom}" variant="{!v.cardIconVariant}"></lightning:avatar>
+            </div>
+            <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <a class="slds-card__header-link slds-truncate" href="javascript:void(0);">
+                            <span><b>{!v.cardTitle}</b></span>
+                        </a>
+                    </h2>
+            </div>
+            <div class="slds-media__figure slds-media_figure_reverse">
+                <aura:if isTrue="{!v.fileRecord.Sharing_URL__c}">
+                    <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" label="Copy Link" iconName="utility:copy" onclick="{!c.handleCopyLink}"></lightning:button>
+                </aura:if>
+            </div>
+        </div>
+        <!--Card Body-->
+        <div>
+            <div class="slds-section slds-is-open">
+                <h3 class="slds-section__title slds-theme_shade">
+                  <span class="slds-truncate slds-p-horizontal_small" title="Public File Preview">Public File Preview</span>
+                </h3>
+                <div aria-hidden="false" class="slds-section__content slds-p-vertical_x-small">
+                    <div class="slds-m-top_x-small">
+                        <aura:if isTrue="{!v.fileRecord.File_Identifier__c}">
+                            <lightning:fileCard fileId="{!v.fileRecord.File_Identifier__c}" description="{!v.fileRecord.Name}" />
+                            <aura:set attribute="else">
+                                <img src="/img/chatter/OpenRoad.svg" class="slds-p-horizontal_xx-large slds-illustration__svg" alt="No File Attached" />
+                                <div class="slds-p-vertical_x-small slds-text-color_weak">
+                                    <h3 class="slds-align_absolute-center">No File Attached</h3>
+                                </div>
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                </div>
+            </div>
+            <aura:if isTrue="{!v.sectionOpen}">
+                <div class="slds-section slds-is-open">
+                    <h3 class="slds-section__title">
+                        <lightning:button class="slds-theme_base slds-section__title-action" iconPosition="left" variant="base" label="Replace Public File" iconName="utility:switch" onclick="{!c.handleSectionSwitch}"></lightning:button>
+                    </h3>
+                    <div class="slds-section__content">
+                        <lightning:input label="Public File Name" fieldLevelHelp="If different than upload name" value="{!v.publicFileName}" placeholder="Enter a public name for the file" type="text" variant="standard"></lightning:input>
+                        <lightning:fileUpload aura:id="fileUploader"
+                            name="fileUploader"
+                            label= "Replace File"
+                            multiple="{!v.multiple}"
+                            disabled="{!v.disabled}"
+                            recordId="{!v.recordId}"
+                            onuploadfinished="{!c.handleUploadFinished}"/>
+                    </div>
+                </div>
+                <aura:set attribute="else">
+                    <div class="slds-section">
+                        <h3 class="slds-section__title">
+                            <lightning:button class="slds-theme_base slds-section__title-action" iconPosition="left" variant="base" label="Replace Public File" iconName="utility:chevronright" onclick="{!c.handleSectionSwitch}"></lightning:button>
+                        </h3>
+                    </div>
+                </aura:set>
+            </aura:if>
+        </div>
+    </div>
+</aura:component>

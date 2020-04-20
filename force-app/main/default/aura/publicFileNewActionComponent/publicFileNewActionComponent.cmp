@@ -1,0 +1,52 @@
+<aura:component implements="lightning:actionOverride" controller="publicFileController" access="global" >
+    <aura:attribute name="fileRecord" type="Object" />
+    <aura:attribute name="uploadedFiles" type="List" default="[]" />
+    <aura:attribute name="fileUploaded" type="Boolean" default="False" />
+    <aura:attribute name="publicFileName" type="String" default="" />
+    <aura:attribute name="userId" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <force:recordData aura:id="recordLoader" 
+    recordId="{!v.recordId}" 
+    fields="Id, Name, File_Identifier__c, Sharing_URL__c" 
+    targetFields="{!v.fileRecord}"
+    mode="EDIT"
+    />
+
+    <div aura:id="editDialog" role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <h2 class="slds-text-heading--medium">New Record</h2>
+            </div>
+            <div class="slds-modal__content slds-p-around--medium slds-wrap ">
+                <div class="slds-section slds-is-open">
+                    <h3 class="slds-section__title slds-theme_shade">
+                        <span class="slds-truncate slds-p-horizontal_small" title="Public File Preview">Upload Public File</span>
+                      </h3>
+                    <div class="slds-section__content">
+                        <lightning:input label="Public File Name" fieldLevelHelp="If different than upload name" value="{!v.publicFileName}" placeholder="Enter a public name for the file" type="text" variant="standard"></lightning:input>
+                        <lightning:fileUpload aura:id="fileUploader"
+                            name="fileUploader"
+                            label= "Replace File"
+                            multiple="{!v.multiple}"
+                            disabled="{!v.disabled}"
+                            recordId="{!v.userId}"
+                            onuploadfinished="{!c.handleUploadFinished}"/>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-modal__footer">                
+                <lightning:button variant="neutral" label="Cancel" onclick="{!c.cancelDialog}" />
+                <aura:if isTrue="{!v.fileUploaded}">
+                    <lightning:button variant="brand" label="Submit" onclick="{!c.saveRecord}" />
+                    <aura:set attribute="else">
+                        <lightning:button variant="brand" disabled="true" label="Submit" />
+                    </aura:set>
+                </aura:if>
+            </div>
+        </div>
+    </div>
+    <div aura:id="overlay" class="slds-backdrop slds-backdrop--open">
+
+    </div>
+</aura:component>	

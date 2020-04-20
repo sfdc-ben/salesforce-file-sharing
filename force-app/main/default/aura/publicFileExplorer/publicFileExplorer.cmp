@@ -1,0 +1,50 @@
+<aura:component access="global" controller="PublicFileSearchController">
+    <aura:attribute name="picklistToFilter" type="String" default="" />
+    <aura:attribute name="objectToFilter" type="String" default="Public_File__c" />
+    <aura:attribute name="pickVals" type="List" />
+    <aura:attribute name="picklistName" type="String" default=""/>
+    <aura:attribute name="files" type="Public_File__c[]" />
+    <aura:attribute name="selectedValue" type="String" />
+    <aura:attribute name="searchKeyWord" type="String" />
+    <aura:attribute name="timer" type="Integer"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <c:picklistValuesService sObjectName="{!v.objectToFilter}" fieldName="{!v.picklistToFilter}" picklistValues="{!v.pickVals}" picklistName="{!v.picklistName}" />
+
+    <div class="slds-m-bottom_x-small">
+        <aura:if isTrue="{!v.picklistToFilter}">
+            <lightning:combobox label="{!v.picklistName}" options="{!v.pickVals}" placeholder="Select an Option" dropdownAlignment="left" variant="standard" onchange="{!c.handlePicklistChange}"></lightning:combobox>
+        </aura:if>
+    </div>
+    <div onmouseleave="{!c.onblur}" aura:id="searchRes" class="slds-m-bottom_x-small slds-form-element slds-lookup slds-is-close"> 
+        <div class="slds-form-element__control">
+            <div class="slds-input-has-icon slds-input-has-icon--right">
+                <div aura:id="lookup-pill" class="">
+                    <div aura:id="lookupField" class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right"  style="width: 100%;"> 
+                        <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right">
+                            <lightning:icon iconName="utility:search" size="x-small" alternativeText="icon"/>
+                        </span>
+                        <ui:inputText updateOn="keyup"
+                                    keyup="{!c.handleSearchTermChange}"
+                                    class="slds-lookup__search-input slds-input inputSize"
+                                    value="{!v.searchKeyWord}"
+                                    placeholder="Search for a file to share"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <aura:if isTrue="{!v.files.length > 0}">
+        <aura:iteration items="{!v.files}" var="file">
+            <c:publicFileCard fileCard="{!file}"/>
+        </aura:iteration>
+        <aura:set attribute="else">
+            <img src="/img/chatter/OpenRoad.svg" class="slds-p-horizontal_xx-large slds-illustration__svg" alt="No Files Found" />
+            <div class="slds-p-vertical_x-small slds-text-color_weak">
+                <h3 class="slds-text-heading_small slds-align_absolute-center">No Files Found</h3>
+            </div>
+        </aura:set>
+    </aura:if>
+    
+</aura:component>

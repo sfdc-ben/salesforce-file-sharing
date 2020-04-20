@@ -1,0 +1,8 @@
+<design:component label="Public File Explorer - Tab/Accordion Version">
+<design:attribute name="picklistToFilter" label="Public File Picklist" description="API Name for the picklist to use as a filter for public files." />
+<design:supportedFormFactors>
+        <design:supportedFormFactor type="Large"/>
+        <design:supportedFormFactor type="Small"/>
+    </design:supportedFormFactors>    
+
+</design:component>

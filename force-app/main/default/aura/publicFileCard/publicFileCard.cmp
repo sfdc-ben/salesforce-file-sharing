@@ -1,0 +1,13 @@
+<aura:component>
+    <aura:attribute name="fileCard" type="Public_File__c" />
+
+    <div class="slds-media slds-media_center slds-p-vertical_x-small">
+        <div class="slds-media__body">
+            <lightning:fileCard fileId="{!v.fileCard.File_Identifier__c}" description="{!v.fileCard.Name}"></lightning:fileCard>
+        </div>
+        <div class="slds-media__figure slds-media__figure_reverse">
+            <lightning:button class="slds-theme_brand" iconPosition="left" variant="brand" label="Copy" iconName="utility:copy" onclick="{!c.handleCopyLink}"></lightning:button>
+        </div>
+    </div>
+    
+</aura:component>	
